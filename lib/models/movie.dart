@@ -1,3 +1,5 @@
+import 'movie_category.dart';
+
 class CastMember {
   const CastMember({
     required this.name,
@@ -12,6 +14,7 @@ class CastMember {
 
 class Movie {
   const Movie({
+    required this.id,
     required this.title,
     required this.year,
     required this.rating,
@@ -27,10 +30,11 @@ class Movie {
     this.cast = const [],
   });
 
+  final String id;
   final String title;
   final int year;
   final double rating;
-  final List<String> genres;
+  final List<MovieCategory> genres;
   final String posterAsset;
   final String heroAsset;
   final String homeHint;
@@ -41,5 +45,9 @@ class Movie {
   final String storyline;
   final List<CastMember> cast;
 
-  String get genreLabel => genres.take(2).join(' • ');
+  String get genreLabel =>
+      genres.take(2).map((genre) => genre.label).join(' • ');
+
+  /// Tag dùng chung cho hiệu ứng Hero giữa danh sách và trang chi tiết.
+  String get heroTag => 'poster-$id';
 }

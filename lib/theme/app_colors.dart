@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Màu thương hiệu của giao diện tối. Widget nên lấy màu qua
+/// `Theme.of(context).colorScheme` để tự đổi theo chế độ Sáng/Tối; hằng số
+/// ở đây chỉ dùng để dựng [ColorScheme] và cho các lớp phủ nằm trên ảnh.
 abstract final class AppColors {
   static const background = Color(0xFF111318);
   static const deepest = Color(0xFF0C0E13);
@@ -9,7 +12,6 @@ abstract final class AppColors {
   static const surfaceSubtle = Color(0xFF1A1B21);
 
   static const primary = Color(0xFFFFC837);
-  static const primaryStrong = Color(0xFFF5BF2D);
   static const onPrimary = Color(0xFF705400);
 
   static const textPrimary = Color(0xFFE2E2E9);

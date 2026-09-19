@@ -1,9 +1,10 @@
 import '../models/movie.dart';
+import '../models/movie_category.dart';
 
 const _inceptionCast = <CastMember>[
   CastMember(
     name: 'C. Nolan',
-    role: 'Director',
+    role: 'Đạo diễn',
     imageAsset: 'assets/images/cast_nolan.png',
   ),
   CastMember(
@@ -25,102 +26,124 @@ const _inceptionCast = <CastMember>[
 
 const movies = <Movie>[
   Movie(
+    id: 'inception',
     title: 'Inception',
     year: 2010,
     rating: 8.8,
-    genres: ['Sci-Fi', 'Action', 'Adventure', 'Mystery'],
+    genres: [
+      MovieCategory.sciFi,
+      MovieCategory.action,
+      MovieCategory.adventure,
+      MovieCategory.mystery,
+    ],
     posterAsset: 'assets/images/poster_inception.png',
     heroAsset: 'assets/images/detail_inception.png',
-    homeHint: 'Tap for details',
-    duration: '2h 28m',
-    certification: 'PG-13',
+    homeHint: 'Siêu phẩm của Nolan',
+    duration: '148 phút',
+    certification: 'T13',
     presentationFormat: 'IMAX 70mm',
-    viewCount: '2.4M',
+    viewCount: '2,4 triệu',
     storyline:
-        'A thief who steals corporate secrets through the use of dream-sharing '
-        'technology is given the inverse task of planting an idea into the mind '
-        'of a C.E.O., but his tragic past may doom the project and his team to '
-        'disaster.',
+        'Dom Cobb là kẻ trộm chuyên đánh cắp bí mật từ tiềm thức khi con người '
+        'đang mơ. Để được trở về với gia đình, anh nhận một nhiệm vụ ngược lại: '
+        'cấy một ý tưởng vào tâm trí người thừa kế của một tập đoàn lớn. Nhưng '
+        'quá khứ đau buồn của Cobb có thể đẩy cả nhóm vào thảm họa.',
     cast: _inceptionCast,
   ),
   Movie(
+    id: 'interstellar',
     title: 'Interstellar',
     year: 2014,
     rating: 8.7,
-    genres: ['Sci-Fi', 'Drama'],
+    genres: [MovieCategory.sciFi, MovieCategory.drama, MovieCategory.adventure],
     posterAsset: 'assets/images/poster_interstellar.png',
     heroAsset: 'assets/images/poster_interstellar.png',
-    homeHint: 'IMAX Premiere',
-    duration: '2h 49m',
-    certification: 'PG-13',
+    homeHint: 'Công chiếu IMAX',
+    duration: '169 phút',
+    certification: 'T13',
     presentationFormat: 'IMAX',
-    viewCount: '2.1M',
+    viewCount: '2,1 triệu',
     storyline:
-        'Explorers travel through a wormhole in space in an attempt to ensure '
-        'humanity\'s survival.',
+        'Khi Trái Đất dần cạn kiệt sự sống, một nhóm nhà du hành vượt qua hố '
+        'giun để tìm kiếm ngôi nhà mới cho nhân loại.',
   ),
   Movie(
+    id: 'dark-knight',
     title: 'The Dark Knight',
     year: 2008,
     rating: 9.0,
-    genres: ['Action', 'Crime'],
+    genres: [MovieCategory.action, MovieCategory.crime, MovieCategory.drama],
     posterAsset: 'assets/images/poster_dark_knight.png',
     heroAsset: 'assets/images/poster_dark_knight.png',
-    homeHint: 'Top Rated',
-    duration: '2h 32m',
-    certification: 'PG-13',
+    homeHint: 'Điểm cao nhất',
+    duration: '152 phút',
+    certification: 'T13',
     presentationFormat: 'IMAX',
-    viewCount: '3.2M',
+    viewCount: '3,2 triệu',
     storyline:
-        'Batman faces a criminal mastermind whose reign of chaos pushes Gotham '
-        'and its heroes to their limits.',
+        'Batman đối đầu với Joker, kẻ chủ mưu gieo rắc hỗn loạn khắp Gotham và '
+        'đẩy những người bảo vệ thành phố đến giới hạn cuối cùng.',
   ),
   Movie(
+    id: 'endgame',
     title: 'Avengers: Endgame',
     year: 2019,
     rating: 8.5,
-    genres: ['Action', 'Sci-Fi'],
+    genres: [
+      MovieCategory.action,
+      MovieCategory.sciFi,
+      MovieCategory.adventure,
+    ],
     posterAsset: 'assets/images/endgame.jpg',
     heroAsset: 'assets/images/endgame.jpg',
-    homeHint: 'Blockbuster',
-    duration: '3h 01m',
-    certification: 'PG-13',
+    homeHint: 'Bom tấn',
+    duration: '181 phút',
+    certification: 'T13',
     presentationFormat: 'IMAX',
-    viewCount: '2.8M',
+    viewCount: '2,8 triệu',
     storyline:
-        'The remaining Avengers assemble once more to reverse the damage caused '
-        'by Thanos and restore the universe.',
+        'Sau cú búng tay của Thanos, các Avengers còn lại tập hợp một lần cuối '
+        'để đảo ngược thảm họa và cứu lấy vũ trụ.',
   ),
   Movie(
+    id: 'oppenheimer',
     title: 'Oppenheimer',
     year: 2023,
     rating: 8.9,
-    genres: ['Biography', 'Drama'],
+    genres: [MovieCategory.biography, MovieCategory.drama],
     posterAsset: 'assets/images/poster_oppenheimer.png',
     heroAsset: 'assets/images/poster_oppenheimer.png',
-    homeHint: 'Award Winner',
-    duration: '3h 00m',
-    certification: 'R',
+    homeHint: 'Đoạt giải Oscar',
+    duration: '180 phút',
+    certification: 'T18',
     presentationFormat: 'IMAX 70mm',
-    viewCount: '1.9M',
+    viewCount: '1,9 triệu',
     storyline:
-        'The story of J. Robert Oppenheimer and his role in developing the '
-        'world\'s first atomic weapon.',
+        'Câu chuyện về nhà vật lý J. Robert Oppenheimer và vai trò của ông '
+        'trong việc chế tạo quả bom nguyên tử đầu tiên của thế giới.',
   ),
   Movie(
+    id: 'spider-verse',
     title: 'Spider-Man: Verse',
     year: 2018,
     rating: 8.4,
-    genres: ['Animation', 'Action'],
+    genres: [
+      MovieCategory.animation,
+      MovieCategory.action,
+      MovieCategory.adventure,
+    ],
     posterAsset: 'assets/images/spiderver.jpg',
     heroAsset: 'assets/images/spiderver.jpg',
-    homeHint: 'Animation Choice',
-    duration: '1h 57m',
-    certification: 'PG',
+    homeHint: 'Hoạt hình xuất sắc',
+    duration: '117 phút',
+    certification: 'P',
     presentationFormat: 'Dolby Cinema',
-    viewCount: '1.7M',
+    viewCount: '1,7 triệu',
     storyline:
-        'Miles Morales becomes Spider-Man and discovers that heroes from other '
-        'dimensions share his extraordinary powers.',
+        'Cậu thiếu niên Miles Morales trở thành Người Nhện và phát hiện những '
+        'người hùng đến từ các vũ trụ khác cũng sở hữu sức mạnh giống mình.',
   ),
 ];
+
+List<Movie> moviesIn(MovieCategory category) =>
+    movies.where((movie) => movie.genres.contains(category)).toList();

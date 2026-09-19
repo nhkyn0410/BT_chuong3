@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import '../models/movie.dart';
-import '../theme/app_colors.dart';
+import '../state/shell_controller.dart';
+import '../theme/app_text_styles.dart';
 
 class SuccessPage extends StatelessWidget {
   const SuccessPage({super.key, required this.movie});
 
   final Movie movie;
 
-  void _backToHome(BuildContext context) {
+  /// Quay về màn hình gốc (MainShell) rồi chuyển sang [tab].
+  void _finish(BuildContext context, AppTab tab) {
+    ShellScope.of(context, listen: false).select(tab);
     Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
@@ -31,8 +35,8 @@ class SuccessPage extends StatelessWidget {
                             center: const Alignment(0.45, -0.12),
                             radius: 0.72,
                             colors: [
-                              AppColors.primary.withValues(alpha: 0.16),
-                              AppColors.background.withValues(alpha: 0),
+                              colors.primary.withValues(alpha: 0.16),
+                              colors.surface.withValues(alpha: 0),
                             ],
                           ),
                         ),
@@ -50,64 +54,53 @@ class SuccessPage extends StatelessWidget {
                               const SizedBox(height: 30),
                               const _SuccessBadge(),
                               const SizedBox(height: 14),
-                              const Text(
-                                'ADDED TO WATCHLIST!',
+                              Text(
+                                'ĐÃ THÊM VÀO DANH SÁCH!',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'BebasNeue',
-                                  color: AppColors.textWarm,
-                                  fontSize: 30,
-                                  height: 32 / 30,
-                                  letterSpacing: 0.75,
+                                style: AppTextStyles.heading.copyWith(
+                                  color: colors.onSurface,
+                                  fontSize: 24,
+                                  height: 30 / 24,
                                 ),
                               ),
-                              const SizedBox(height: 5),
-                              const Text(
-                                'The movie has been successfully added to your\n'
-                                'watchlist and synchronized across your library.',
+                              const SizedBox(height: 8),
+                              Text(
+                                'Phim đã được lưu vào danh sách xem sau.\n'
+                                'Bạn có thể xem lại bất cứ lúc nào ở tab '
+                                '"Xem sau".',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: AppColors.textSecondary,
+                                  color: colors.onSurfaceVariant,
                                   fontSize: 14,
                                   height: 22.75 / 14,
                                 ),
                               ),
                               const SizedBox(height: 18),
                               Center(child: _MovieRecap(movie: movie)),
-                              const SizedBox(height: 15),
+                              const SizedBox(height: 24),
                               SizedBox(
                                 height: 56,
                                 child: FilledButton.icon(
-                                  onPressed: () => _backToHome(context),
+                                  onPressed: () =>
+                                      _finish(context, AppTab.watchlist),
                                   icon: const Icon(
-                                    Icons.arrow_back_rounded,
+                                    Icons.bookmark_rounded,
                                     size: 18,
                                   ),
-                                  label: const Text('BACK TO HOME'),
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: AppColors.primary,
-                                    foregroundColor: AppColors.onPrimary,
-                                    elevation: 0,
-                                    textStyle: const TextStyle(
-                                      fontSize: 14,
-                                      height: 18 / 14,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.28,
-                                    ),
-                                    shape: const StadiumBorder(),
-                                  ),
+                                  label: const Text('XEM DANH SÁCH XEM SAU'),
                                 ),
                               ),
-                              const SizedBox(height: 16),
-                              const Text(
-                                'TAP TO BROWSE NEW RELEASES',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppColors.textMuted,
-                                  fontSize: 10,
-                                  height: 14 / 10,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 1,
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                height: 56,
+                                child: OutlinedButton.icon(
+                                  onPressed: () =>
+                                      _finish(context, AppTab.home),
+                                  icon: const Icon(
+                                    Icons.home_outlined,
+                                    size: 18,
+                                  ),
+                                  label: const Text('VỀ TRANG CHỦ'),
                                 ),
                               ),
                             ],
@@ -131,27 +124,25 @@ class _SuccessStatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.surfaceMuted.withValues(alpha: 0.62),
+            color: colors.surfaceContainerHigh.withValues(alpha: 0.62),
             borderRadius: BorderRadius.circular(999),
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.theaters_outlined, size: 15, color: AppColors.primary),
-              SizedBox(width: 8),
+              Icon(Icons.theaters_outlined, size: 15, color: colors.primary),
+              const SizedBox(width: 8),
               Text(
-                'CELLULOID VAULT',
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 10,
-                  height: 14 / 10,
-                  fontWeight: FontWeight.w700,
+                'MOVIE EXPLORER',
+                style: AppTextStyles.overline.copyWith(
+                  color: colors.onSurfaceVariant,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -161,21 +152,18 @@ class _SuccessStatusBar extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: AppColors.surface.withValues(alpha: 0.82),
+            color: colors.surfaceContainer.withValues(alpha: 0.82),
             borderRadius: BorderRadius.circular(999),
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.done_all_rounded, size: 14, color: AppColors.primary),
-              SizedBox(width: 4),
+              Icon(Icons.done_all_rounded, size: 14, color: colors.primary),
+              const SizedBox(width: 4),
               Text(
-                'SYNCED',
-                style: TextStyle(
-                  color: AppColors.primaryStrong,
-                  fontSize: 10,
-                  height: 14 / 10,
-                  fontWeight: FontWeight.w700,
+                'ĐÃ ĐỒNG BỘ',
+                style: AppTextStyles.overline.copyWith(
+                  color: colors.primary,
                   letterSpacing: 0.6,
                 ),
               ),
@@ -192,6 +180,7 @@ class _SuccessBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SizedBox(
       height: 192,
       child: Center(
@@ -210,14 +199,10 @@ class _SuccessBadge extends StatelessWidget {
               Container(
                 width: 80,
                 height: 80,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [AppColors.primary, AppColors.primaryStrong],
-                  ),
-                  boxShadow: [
+                  color: colors.primary,
+                  boxShadow: const [
                     BoxShadow(
                       color: Color(0x40000000),
                       blurRadius: 28,
@@ -225,10 +210,10 @@ class _SuccessBadge extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.check_rounded,
                   size: 40,
-                  color: AppColors.onPrimary,
+                  color: colors.onPrimary,
                 ),
               ),
             ],
@@ -246,10 +231,11 @@ class _MovieRecap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.surfaceMuted.withValues(alpha: 0.92),
+        color: colors.surfaceContainerHigh.withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(999),
         boxShadow: const [
           BoxShadow(
@@ -264,24 +250,19 @@ class _MovieRecap extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 32,
-              height: 32,
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                color: AppColors.deepest,
-                shape: BoxShape.circle,
-              ),
+            ClipOval(
               child: Image.asset(
-                'assets/images/success_inception.png',
+                movie.posterAsset,
+                width: 32,
+                height: 32,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 12),
             Text(
               movie.title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: colors.onSurface,
                 fontSize: 14,
                 height: 20 / 14,
                 fontWeight: FontWeight.w600,
@@ -290,29 +271,29 @@ class _MovieRecap extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               '(${movie.year})',
-              style: const TextStyle(
-                color: AppColors.textMuted,
+              style: TextStyle(
+                color: colors.outline,
                 fontSize: 12,
                 height: 16 / 12,
               ),
             ),
             const SizedBox(width: 10),
-            const SizedBox.square(
+            SizedBox.square(
               dimension: 4,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: AppColors.textMuted,
+                  color: colors.outline,
                   shape: BoxShape.circle,
                 ),
               ),
             ),
             const SizedBox(width: 10),
-            const Icon(Icons.star_rounded, size: 14, color: AppColors.primary),
+            Icon(Icons.star_rounded, size: 14, color: colors.primary),
             const SizedBox(width: 4),
             Text(
               movie.rating.toStringAsFixed(1),
-              style: const TextStyle(
-                color: AppColors.primaryStrong,
+              style: TextStyle(
+                color: colors.primary,
                 fontSize: 12,
                 height: 16 / 12,
                 fontWeight: FontWeight.w700,

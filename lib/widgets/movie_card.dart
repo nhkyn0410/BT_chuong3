@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../models/movie.dart';
+import '../state/watchlist_controller.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
+import 'hero_placeholder.dart';
 
 class MovieCard extends StatelessWidget {
-  const MovieCard({
-    super.key,
-    required this.movie,
-    this.onTap,
-    this.showExploreBadge = false,
-  });
+  const MovieCard({super.key, required this.movie, required this.onTap});
 
   final Movie movie;
-  final VoidCallback? onTap;
-  final bool showExploreBadge;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
-      elevation: 0,
-      shadowColor: Colors.black.withValues(alpha: 0.35),
+      color: Theme.of(context).colorScheme.surfaceContainer,
       borderRadius: BorderRadius.circular(32),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -33,14 +28,9 @@ class MovieCard extends StatelessWidget {
               children: [
                 SizedBox(
                   height: posterHeight,
-                  child: _Poster(
-                    movie: movie,
-                    showExploreBadge: showExploreBadge,
-                  ),
+                  child: _Poster(movie: movie),
                 ),
-                Expanded(
-                  child: _Metadata(movie: movie, enabled: onTap != null),
-                ),
+                Expanded(child: _Metadata(movie: movie)),
               ],
             );
           },
@@ -51,31 +41,37 @@ class MovieCard extends StatelessWidget {
 }
 
 class _Poster extends StatelessWidget {
-  const _Poster({required this.movie, required this.showExploreBadge});
+  const _Poster({required this.movie});
 
   final Movie movie;
-  final bool showExploreBadge;
 
   @override
   Widget build(BuildContext context) {
+    final cardColor = Theme.of(context).colorScheme.surfaceContainer;
+    final saved = WatchlistScope.of(context).contains(movie);
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        ColoredBox(
-          color: AppColors.surfaceMuted,
-          child: Image.asset(movie.posterAsset, fit: BoxFit.cover),
+        Hero(
+          tag: movie.heroTag,
+          placeholderBuilder: keepHeroVisible,
+          child: ColoredBox(
+            color: AppColors.surfaceMuted,
+            child: Image.asset(movie.posterAsset, fit: BoxFit.cover),
+          ),
         ),
-        const DecoratedBox(
+        DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
                 Colors.transparent,
-                Color(0x331E1F25),
-                AppColors.surface,
+                cardColor.withValues(alpha: 0.2),
+                cardColor,
               ],
-              stops: [0, 0.55, 1],
+              stops: const [0, 0.55, 1],
             ),
           ),
         ),
@@ -92,12 +88,11 @@ class _Poster extends StatelessWidget {
               const SizedBox(width: 3),
               Text(
                 movie.rating.toStringAsFixed(1),
-                style: const TextStyle(
-                  color: AppColors.textWarm,
+                style: AppTextStyles.overline.copyWith(
                   fontSize: 12,
                   height: 16 / 12,
-                  fontWeight: FontWeight.w700,
                   letterSpacing: 0.48,
+                  color: AppColors.textWarm,
                 ),
               ),
             ],
@@ -110,55 +105,36 @@ class _Poster extends StatelessWidget {
             children: [
               Text(
                 '${movie.year}',
-                style: const TextStyle(
+                style: AppTextStyles.overline.copyWith(
                   color: AppColors.textSecondary,
-                  fontSize: 10,
-                  height: 14 / 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.6,
                 ),
               ),
             ],
           ),
         ),
-        if (showExploreBadge)
-          Positioned(
+        if (saved)
+          const Positioned(
             right: 8,
             bottom: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(999),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x33000000),
-                    blurRadius: 15,
-                    offset: Offset(0, 6),
+            child: _GlassBadge(
+              children: [
+                Icon(
+                  Icons.bookmark_added_rounded,
+                  size: 13,
+                  color: AppColors.primary,
+                ),
+                SizedBox(width: 4),
+                Text(
+                  'ĐÃ LƯU',
+                  style: TextStyle(
+                    color: AppColors.textWarm,
+                    fontSize: 10,
+                    height: 14 / 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
                   ),
-                ],
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'EXPLORE',
-                    style: TextStyle(
-                      color: AppColors.onPrimary,
-                      fontSize: 10,
-                      height: 14 / 10,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  SizedBox(width: 4),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 11,
-                    color: AppColors.onPrimary,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
       ],
@@ -166,6 +142,7 @@ class _Poster extends StatelessWidget {
   }
 }
 
+/// Nhãn nền tối nằm trên ảnh poster, giữ nguyên màu ở cả chế độ Sáng/Tối.
 class _GlassBadge extends StatelessWidget {
   const _GlassBadge({required this.children});
 
@@ -192,13 +169,13 @@ class _GlassBadge extends StatelessWidget {
 }
 
 class _Metadata extends StatelessWidget {
-  const _Metadata({required this.movie, required this.enabled});
+  const _Metadata({required this.movie});
 
   final Movie movie;
-  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -208,8 +185,8 @@ class _Metadata extends StatelessWidget {
             movie.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: colors.onSurface,
               fontSize: 16,
               height: 22 / 16,
               fontWeight: FontWeight.w600,
@@ -220,8 +197,8 @@ class _Metadata extends StatelessWidget {
             movie.genreLabel,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: colors.onSurfaceVariant,
               fontSize: 12,
               height: 16 / 12,
             ),
@@ -229,28 +206,15 @@ class _Metadata extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
-              Icon(
-                enabled
-                    ? Icons.touch_app_outlined
-                    : Icons.local_movies_outlined,
-                size: 11,
-                color: enabled
-                    ? AppColors.primaryStrong
-                    : AppColors.textSecondary.withValues(alpha: 0.6),
-              ),
+              Icon(Icons.touch_app_outlined, size: 11, color: colors.primary),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  movie.homeHint,
+                  movie.homeHint.toUpperCase(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: enabled
-                        ? AppColors.primaryStrong
-                        : AppColors.textSecondary.withValues(alpha: 0.6),
-                    fontSize: 10,
-                    height: 14 / 10,
-                    fontWeight: FontWeight.w700,
+                  style: AppTextStyles.overline.copyWith(
+                    color: colors.primary,
                     letterSpacing: 0.6,
                   ),
                 ),

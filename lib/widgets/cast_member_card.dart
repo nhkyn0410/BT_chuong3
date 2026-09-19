@@ -10,6 +10,7 @@ class CastMemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SizedBox(
       width: 84,
       child: Column(
@@ -37,8 +38,8 @@ class CastMemberCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: colors.onSurface,
               fontSize: 14,
               height: 20 / 14,
               fontWeight: FontWeight.w600,
@@ -49,8 +50,8 @@ class CastMemberCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.textMuted,
+            style: TextStyle(
+              color: colors.outline,
               fontSize: 12,
               height: 16 / 12,
             ),
